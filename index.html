@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ScholarMatch AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(135deg, #182848, #4b6cb7);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 17px;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #182848;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4b6cb7;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #182848;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .main-button:hover {
+            background: #263d70;
+        }
+
+        /* Dashboard */
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #182848;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Filters */
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .filters input,
+        .filters select {
+            background: white;
+        }
+
+        /* Messages */
+
+        .message {
+            padding: 15px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #b00020;
+        }
+
+        .success {
+            background: #e5f7e9;
+            color: #146c2e;
+        }
+
+        /* Scholarship */
+
+        .scholarship {
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+            background: #fff;
+        }
+
+        .scholarship h3 {
+            color: #182848;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .info {
+            margin: 9px 0;
+            line-height: 1.5;
+        }
+
+        .open {
+            color: green;
+            font-weight: bold;
+        }
+
+        .closed {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Match Score */
+
+        .match-box {
+            background: #eef4ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 15px 0;
+        }
+
+        .match-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+        }
+
+        .match-score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #182848;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #dce3f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #198754;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .why-match {
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        /* Countdown */
+
+        .countdown {
+            background: #eef4ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 13px 0;
+            font-weight: bold;
+            color: #182848;
+        }
+
+        .countdown.urgent {
+            background: #fff0f0;
+            color: #c62828;
+        }
+
+        /* Documents */
+
+        .documents {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .documents h4 {
+            margin-bottom: 12px;
+            color: #182848;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .document-item:hover {
+            background: #eef4ff;
+        }
+
+        .document-item input {
+            width: auto;
+        }
+
+        .document-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        /* Roadmap */
+
+        .roadmap {
+            margin-top: 18px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .roadmap h4 {
+            color: #182848;
+            margin-bottom: 12px;
+        }
+
+        .roadmap ol {
+            padding-left: 25px;
+        }
+
+        .roadmap li {
+            margin-bottom: 8px;
+        }
+
+        /* Apply */
+
+        .apply-btn {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #198754;
+            color: white;
+            padding: 13px;
+            border-radius: 8px;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        .apply-btn:hover {
+            background: #146c43;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            header h1 {
+                font-size: 27px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎓 ScholarMatch AI</h1>
+    <p>AI-powered scholarship discovery and matching platform</p>
+</header>
+
+<div class="container">
+
+    <!-- Student Profile -->
+
+    <div class="card">
+
+        <h2>👨‍🎓 Student Profile</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="name">Student Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter your name"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="income">Annual Family Income (₹)</label>
+                <input
+                    type="number"
+                    id="income"
+                    placeholder="Example: 250000"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+
+                <select id="category">
+
+                    <option value="">Select Category</option>
+                    <option value="General">General</option>
+                    <option value="OBC">OBC</option>
+                    <option value="SC">SC</option>
+                    <option value="ST">ST</option>
+                    <option value="EWS">EWS</option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="percentage">Academic Percentage</label>
+
+                <input
+                    type="number"
+                    id="percentage"
+                    min="0"
+                    max="100"
+                    placeholder="Example: 75"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="education">Education / Course</label>
+
+                <select id="education">
+
+                    <option value="">Select Education</option>
+                    <option value="School">School</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="UG">Undergraduate (UG)</option>
+                    <option value="PG">Postgraduate (PG)</option>
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="state">State</label>
+
+                <input
+                    type="text"
+                    id="state"
+                    placeholder="Example: Telangana"
+                >
+            </div>
+
+        </div>
+
+        <button
+            class="main-button"
+            onclick="findScholarships()"
+        >
+            🔍 Find My Scholarships
+        </button>
+
+    </div>
+
+
+    <!-- Message -->
+
+    <div id="message" class="message"></div>
+
+
+    <!-- Dashboard -->
+
+    <div id="dashboard" class="dashboard" style="display:none;">
+
+        <div class="stat">
+            <div
+                class="stat-number"
+                id="totalCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Scholarships Found
+            </div>
+        </div>
+
+        <div class="stat">
+            <div
+                class="stat-number"
+                id="closingCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Closing Soon
+            </div>
+        </div>
+
+        <div class="stat">
+            <div
+                class="stat-number"
+                id="documentCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Documents
+            </div>
+        </div>
+
+        <div class="stat">
+            <div
+                class="stat-number"
+                id="bestScore"
+            >
+                0%
+            </div>
+
+            <div class="stat-label">
+                Best Match
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Results -->
+
+    <div class="card">
+
+        <h2>🎯 Matching Scholarships</h2>
+
+        <!-- Search and filters -->
+
+        <div
+            id="filterArea"
+            style="display:none;"
+        >
+
+            <div class="filters">
+
+                <input
+                    type="text"
+                    id="searchScholarship"
+                    placeholder="🔎 Search scholarship..."
+                    oninput="applyFilters()"
+                >
+
+                <select
+                    id="filterEducation"
+                    onchange="applyFilters()"
+                >
+                    <option value="">All Education</option>
+                    <option value="School">School</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="UG">UG</option>
+                    <option value="PG">PG</option>
+                </select>
+
+                <select
+                    id="filterCategory"
+                    onchange="applyFilters()"
+                >
+                    <option value="">All Categories</option>
+                    <option value="General">General</option>
+                    <option value="OBC">OBC</option>
+                    <option value="SC">SC</option>
+                    <option value="ST">ST</option>
+                    <option value="EWS">EWS</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <div id="results">
+
+            <p>
+                Enter your details and click
+                "Find My Scholarships".
+            </p>
+
+        </div>
+
+        <div
+            id="lastUpdated"
+            class="last-updated"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    <p>
+        ScholarMatch AI • Smart Scholarship Discovery Platform
+    </p>
+
+</footer>
+
+
+<script>
+
+let allScholarships = [];
+let studentProfile = {};
+
+
+/* =========================
+   FIND SCHOLARSHIPS
+========================= */
+
+async function findScholarships() {
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    const income =
+        document.getElementById("income").value;
+
+    const category =
+        document.getElementById("category").value;
+
+    const percentage =
+        document.getElementById("percentage").value;
+
+    const education =
+        document.getElementById("education").value;
+
+
+    const message =
+        document.getElementById("message");
+
+    const results =
+        document.getElementById("results");
+
+
+    message.style.display = "none";
+    message.className = "message";
+
+
+    if (
+        !name ||
+        !income ||
+        !category ||
+        !percentage ||
+        !education
+    ) {
+
+        message.textContent =
+            "⚠️ Please fill all required fields.";
+
+        message.classList.add("error");
+
+        message.style.display = "block";
+
+        return;
+    }
+
+
+    studentProfile = {
+
+        income: Number(income),
+
+        category: category,
+
+        percentage: Number(percentage),
+
+        education: education
+
+    };
+
+
+    results.innerHTML =
+        "<p>🔄 Finding the best scholarships for you...</p>";
+
+
+    try {
+
+        const response =
+            await fetch("/api/match", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(studentProfile)
+
+            });
+
+
+        if (!response.ok) {
+
+            throw new Error("Server error");
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        allScholarships =
+            data.scholarships || [];
+
+
+        displayResults(
+            data,
+            name
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        results.innerHTML = "";
+
+        message.textContent =
+            "❌ Could not connect to the scholarship server. Make sure server.js is running.";
+
+        message.classList.add("error");
+
+        message.style.display = "block";
+
+    }
+
+}
+
+
+/* =========================
+   DISPLAY RESULTS
+========================= */
+
+function displayResults(data, name) {
+
+    const results =
+        document.getElementById("results");
+
+    const lastUpdated =
+        document.getElementById("lastUpdated");
+
+    const dashboard =
+        document.getElementById("dashboard");
+
+    const filterArea =
+        document.getElementById("filterArea");
+
+
+    if (
+        !data.scholarships ||
+        data.scholarships.length === 0
+    ) {
+
+        dashboard.style.display = "none";
+        filterArea.style.display = "none";
+
+        results.innerHTML = `
+
+            <div
+                class="message error"
+                style="display:block;"
+            >
+                😔 Sorry ${escapeHtml(name)},
+                no matching scholarships were found.
+            </div>
+
+        `;
+
+        lastUpdated.textContent =
+            data.lastUpdated
+            ? "🕒 Database checked: " +
+              formatDate(data.lastUpdated)
+            : "";
+
+        return;
+
+    }
+
+
+    const scholarships =
+        data.scholarships.map(
+            scholarship => {
+
+                return {
+
+                    ...scholarship,
+
+                    matchScore:
+                        calculateMatchScore(
+                            scholarship
+                        )
+
+                };
+
+            }
+        );
+
+
+    scholarships.sort(
+        (a, b) =>
+            b.matchScore -
+            a.matchScore
+    );
+
+
+    allScholarships =
+        scholarships;
+
+
+    dashboard.style.display = "grid";
+    filterArea.style.display = "block";
+
+
+    updateDashboard(
+        scholarships
+    );
+
+
+    results.innerHTML = `
+
+        <div
+            class="message success"
+            style="display:block;"
+        >
+            🎉 Hi ${escapeHtml(name)}!
+            We found
+            <strong>${scholarships.length}</strong>
+            matching scholarship(s).
+        </div>
+
+    `;
+
+
+    renderScholarships(
+        scholarships
+    );
+
+
+    lastUpdated.textContent =
+        data.lastUpdated
+        ? "🕒 Database last checked: " +
+          formatDate(data.lastUpdated)
+        : "";
+
+}
+
+
+/* =========================
+   MATCH SCORE
+========================= */
+
+function calculateMatchScore(scholarship) {
+
+    let score = 70;
+
+
+    const income =
+        studentProfile.income;
+
+    const percentage =
+        studentProfile.percentage;
+
+
+    /* Income strength */
+
+    if (
+        scholarship.incomeLimit > 0
+    ) {
+
+        const incomeRatio =
+            income /
+            scholarship.incomeLimit;
+
+
+        if (incomeRatio <= 0.5) {
+
+            score += 10;
+
+        } else if (incomeRatio <= 0.75) {
+
+            score += 7;
+
+        } else {
+
+            score += 4;
+
+        }
+
+    }
+
+
+    /* Academic strength */
+
+    if (
+        scholarship.minPercentage
+    ) {
+
+        const margin =
+            percentage -
+            scholarship.minPercentage;
+
+
+        if (margin >= 20) {
+
+            score += 10;
+
+        } else if (margin >= 10) {
+
+            score += 7;
+
+        } else {
+
+            score += 5;
+
+        }
+
+    }
+
+
+    /* Maximum */
+
+    return Math.min(
+        99,
+        Math.max(
+            75,
+            score
+        )
+    );
+
+}
+
+
+/* =========================
+   RENDER SCHOLARSHIPS
+========================= */
+
+function renderScholarships(
+    scholarships
+) {
+
+    const results =
+        document.getElementById("results");
+
+
+    const existingMessage =
+        results.querySelector(".success");
+
+
+    results.innerHTML = "";
+
+
+    if (existingMessage) {
+
+        results.appendChild(
+            existingMessage
+        );
+
+    }
+
+
+    if (
+        scholarships.length === 0
+    ) {
+
+        results.innerHTML += `
+
+            <div class="no-results">
+
+                🔎 No scholarships match
+                your current filters.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    scholarships.forEach(
+        (scholarship, index) => {
+
+            const documents =
+                scholarship.documents || [];
+
+
+            let documentHTML = "";
+
+
+            if (
+                documents.length > 0
+            ) {
+
+                documentHTML = `
+
+                    <div class="documents">
+
+                        <h4>
+                            📄 Required Documents
+                        </h4>
+
+                        ${documents
+                            .map(
+                                (doc, docIndex) => {
+
+                                    const checkboxId =
+                                        `doc-${index}-${docIndex}`;
+
+                                    return `
+
+                                        <div
+                                            class="document-item"
+                                        >
+
+                                            <input
+                                                type="checkbox"
+                                                id="${checkboxId}"
+                                            >
+
+                                            <label
+                                                for="${checkboxId}"
+                                            >
+                                                ${escapeHtml(doc)}
+                                            </label>
+
+                                        </div>
+
+                                    `;
+
+                                }
+                            )
+                            .join("")}
+
+                    </div>
+
+                `;
+
+            } else {
+
+                documentHTML = `
+
+                    <div class="documents">
+
+                        <h4>
+                            📄 Required Documents
+                        </h4>
+
+                        <p>
+                            Check the official scholarship
+                            notification for the latest
+                            requirements.
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            const roadmapHTML = `
+
+                <div class="roadmap">
+
+                    <h4>
+                        🗺️ Application Roadmap
+                    </h4>
+
+                    <ol>
+
+                        <li>
+                            Check your eligibility
+                        </li>
+
+                        <li>
+                            Prepare required documents
+                        </li>
+
+                        <li>
+                            Open the official application portal
+                        </li>
+
+                        <li>
+                            Fill in the application form
+                        </li>
+
+                        <li>
+                            Upload required documents
+                        </li>
+
+                        <li>
+                            Review your application
+                        </li>
+
+                        <li>
+                            Submit the application
+                        </li>
+
+                        <li>
+                            Track application status
+                        </li>
+
+                    </ol>
+
+                </div>
+
+            `;
+
+
+            const explanation = getExplanation(
+                scholarship
+            );
+
+
+            const card = document.createElement(
+                "div"
+            );
+
+            card.className =
+                "scholarship";
+
+
+            card.innerHTML = `
+
+                <h3>
+                    🎓 ${escapeHtml(
+                        scholarship.name
+                    )}
+                </h3>
+
+
+                <!-- Match Score -->
+
+                <div class="match-box">
+
+                    <div class="match-title">
+
+                        <strong>
+                            🤖 AI Match Score
+                        </strong>
+
+                        <span class="match-score">
+                            ${scholarship.matchScore}%
+                        </span>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:${scholarship.matchScore}%"
+                        ></div>
+
+                    </div>
+
+                    <div class="why-match">
+
+                        ${explanation}
+
+                    </div>
+
+                </div>
+
+
+                <div class="info">
+
+                    <strong>Status:</strong>
+
+                    <span
+                        class="${
+                            scholarship.status === "Open"
+                            ? "open"
+                            : "closed"
+                        }"
+                    >
+                        ${escapeHtml(
+                            scholarship.status ||
+                            "Unknown"
+                        )}
+                    </span>
+
+                </div>
+
+
+                <div class="info">
+
+                    <strong>
+                        📅 Deadline:
+                    </strong>
+
+                    ${escapeHtml(
+                        scholarship.deadline ||
+                        "Not specified"
+                    )}
+
+                </div>
+
+
+                <div
+                    class="countdown"
+                    data-deadline="${
+                        escapeAttribute(
+                            scholarship.deadline ||
+                            ""
+                        )
+                    }"
+                >
+                    ⏳ Calculating deadline...
+                </div>
+
+
+                <div class="info">
+
+                    <strong>
+                        📊 Minimum Percentage:
+                    </strong>
+
+                    ${scholarship.minPercentage}%
+
+                </div>
+
+
+                <div class="info">
+
+                    <strong>
+                        💰 Income Limit:
+                    </strong>
+
+                    ₹${Number(
+                        scholarship.incomeLimit
+                    ).toLocaleString("en-IN")}
+
+                </div>
+
+
+                <div class="info">
+
+                    <strong>
+                        🎓 Education:
+                    </strong>
+
+                    ${escapeHtml(
+                        (
+                            scholarship.education ||
+                            []
+                        ).join(", ")
+                    )}
+
+                </div>
+
+
+                <div class="info">
+
+                    <strong>
+                        🏷️ Eligible Categories:
+                    </strong>
+
+                    ${escapeHtml(
+                        (
+                            scholarship.category ||
+                            []
+                        ).join(", ")
+                    )}
+
+                </div>
+
+
+                ${documentHTML}
+
+
+                ${roadmapHTML}
+
+
+                <a
+                    class="apply-btn"
+                    href="${
+                        escapeAttribute(
+                            scholarship.applyUrl ||
+                            "#"
+                        )
+                    }"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    🚀 Apply / Official Details
+                </a>
+
+            `;
+
+
+            results.appendChild(card);
+
+        }
+    );
+
+
+    updateAllCountdowns();
+
+}
+
+
+/* =========================
+   ELIGIBILITY EXPLANATION
+========================= */
+
+function getExplanation(
+    scholarship
+) {
+
+    const income =
+        studentProfile.income;
+
+    const percentage =
+        studentProfile.percentage;
+
+    const category =
+        studentProfile.category;
+
+    const education =
+        studentProfile.education;
+
+
+    let points = [];
+
+
+    if (
+        income <=
+        scholarship.incomeLimit
+    ) {
+
+        points.push(
+            "✅ Your family income meets the income limit."
+        );
+
+    }
+
+
+    if (
+        percentage >=
+        scholarship.minPercentage
+    ) {
+
+        points.push(
+            "✅ Your academic percentage meets the minimum requirement."
+        );
+
+    }
+
+
+    if (
+        scholarship.category &&
+        scholarship.category.includes(
+            category
+        )
+    ) {
+
+        points.push(
+            "✅ Your category is eligible."
+        );
+
+    }
+
+
+    if (
+        scholarship.education &&
+        scholarship.education.includes(
+            education
+        )
+    ) {
+
+        points.push(
+            "✅ Your education level matches."
+        );
+
+    }
+
+
+    return points.join("<br>");
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard(
+    scholarships
+) {
+
+    document.getElementById(
+        "totalCount"
+    ).textContent =
+        scholarships.length;
+
+
+    let closingSoon = 0;
+
+    let documents = 0;
+
+    let bestScore = 0;
+
+
+    scholarships.forEach(
+        scholarship => {
+
+            if (
+                scholarship.deadline
+            ) {
+
+                const deadline =
+                    new Date(
+                        scholarship.deadline +
+                        "T23:59:59"
+                    );
+
+                const now =
+                    new Date();
+
+                const difference =
+                    deadline.getTime() -
+                    now.getTime();
+
+
+                if (
+                    difference > 0 &&
+                    difference <=
+                    7 * 24 * 60 * 60 * 1000
+                ) {
+
+                    closingSoon++;
+
+                }
+
+            }
+
+
+            documents +=
+                (
+                    scholarship.documents ||
+                    []
+                ).length;
+
+
+            bestScore =
+                Math.max(
+                    bestScore,
+                    scholarship.matchScore ||
+                    0
+                );
+
+        }
+    );
+
+
+    document.getElementById(
+        "closingCount"
+    ).textContent =
+        closingSoon;
+
+
+    document.getElementById(
+        "documentCount"
+    ).textContent =
+        documents;
+
+
+    document.getElementById(
+        "bestScore"
+    ).textContent =
+        bestScore + "%";
+
+}
+
+
+/* =========================
+   SEARCH + FILTER
+========================= */
+
+function applyFilters() {
+
+    const search =
+        document
+            .getElementById(
+                "searchScholarship"
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const education =
+        document
+            .getElementById(
+                "filterEducation"
+            )
+            .value;
+
+
+    const category =
+        document
+            .getElementById(
+                "filterCategory"
+            )
+            .value;
+
+
+    const filtered =
+        allScholarships.filter(
+            scholarship => {
+
+                const nameMatch =
+                    scholarship.name
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const educationMatch =
+                    !education ||
+                    (
+                        scholarship.education ||
+                        []
+                    ).includes(
+                        education
+                    );
+
+
+                const categoryMatch =
+                    !category ||
+                    (
+                        scholarship.category ||
+                        []
+                    ).includes(
+                        category
+                    );
+
+
+                return (
+                    nameMatch &&
+                    educationMatch &&
+                    categoryMatch
+                );
+
+            }
+        );
+
+
+    renderScholarships(
+        filtered
+    );
+
+}
+
+
+/* =========================
+   COUNTDOWN
+========================= */
+
+function getCountdown(
+    deadline
+) {
+
+    if (!deadline) {
+
+        return "📅 Deadline not available";
+
+    }
+
+
+    const deadlineDate =
+        new Date(
+            deadline +
+            "T23:59:59"
+        );
+
+
+    const now =
+        new Date();
+
+
+    const difference =
+        deadlineDate.getTime() -
+        now.getTime();
+
+
+    if (
+        difference <= 0
+    ) {
+
+        return "🔴 Deadline passed";
+
+    }
+
+
+    const totalSeconds =
+        Math.floor(
+            difference / 1000
+        );
+
+
+    const days =
+        Math.floor(
+            totalSeconds / 86400
+        );
+
+
+    const hours =
+        Math.floor(
+            (
+                totalSeconds % 86400
+            ) / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (
+                totalSeconds % 3600
+            ) / 60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    if (
+        days <= 7
+    ) {
+
+        return `
+
+            🚨 URGENT —
+            ${days} days
+            ${hours} hours
+            ${minutes} minutes
+            ${seconds} seconds left
+
+        `;
+
+    }
+
+
+    return `
+
+        ⏳
+        ${days} days
+        ${hours} hours
+        ${minutes} minutes
+        ${seconds} seconds left
+
+    `;
+
+}
+
+
+function updateAllCountdowns() {
+
+    const countdowns =
+        document.querySelectorAll(
+            ".countdown"
+        );
+
+
+    countdowns.forEach(
+        element => {
+
+            const deadline =
+                element.getAttribute(
+                    "data-deadline"
+                );
+
+
+            element.innerHTML =
+                getCountdown(
+                    deadline
+                );
+
+
+            if (!deadline) {
+                return;
+            }
+
+
+            const deadlineDate =
+                new Date(
+                    deadline +
+                    "T23:59:59"
+                );
+
+
+            const now =
+                new Date();
+
+
+            const difference =
+                deadlineDate.getTime() -
+                now.getTime();
+
+
+            if (
+                difference > 0 &&
+                difference <=
+                7 * 24 * 60 * 60 * 1000
+            ) {
+
+                element.classList.add(
+                    "urgent"
+                );
+
+            } else {
+
+                element.classList.remove(
+                    "urgent"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function formatDate(
+    dateString
+) {
+
+    const date =
+        new Date(
+            dateString
+        );
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return dateString;
+
+    }
+
+
+    return date.toLocaleString(
+        "en-IN",
+        {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }
+    );
+
+}
+
+
+/* =========================
+   SECURITY HELPERS
+========================= */
+
+function escapeHtml(
+    value
+) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+function escapeAttribute(
+    value
+) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        );
+
+}
+
+
+/* =========================
+   LIVE UPDATE
+========================= */
+
+setInterval(
+    () => {
+
+        updateAllCountdowns();
+
+    },
+    1000
+);
+
+</script>
+
+</body>
+</html>

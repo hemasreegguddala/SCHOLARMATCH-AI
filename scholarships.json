@@ -1,0 +1,139 @@
+{
+  "lastUpdated": "2026-09-05T10:17:03.957Z",
+  "source": "National Scholarship Portal",
+  "scholarships": [
+    {
+      "id": 1,
+      "name": "PM-USP Central Sector Scheme of Scholarship for College and University Students",
+      "education": [
+        "UG"
+      ],
+      "category": [
+        "General",
+        "OBC",
+        "SC",
+        "ST",
+        "EWS"
+      ],
+      "incomeLimit": 450000,
+      "minPercentage": 80,
+      "deadline": "2026-10-31",
+      "status": "Open",
+      "applyUrl": "https://scholarships.gov.in/",
+      "documents": [
+        "Aadhaar / ID Proof",
+        "Income Certificate",
+        "Previous Academic Marksheet",
+        "Bank Account Details",
+        "Passport-size Photograph"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "AICTE Pragati Scholarship Scheme for Girl Students",
+      "education": [
+        "Diploma",
+        "UG"
+      ],
+      "category": [
+        "General",
+        "OBC",
+        "SC",
+        "ST",
+        "EWS"
+      ],
+      "incomeLimit": 800000,
+      "minPercentage": 60,
+      "deadline": "2026-10-31",
+      "status": "Open",
+      "applyUrl": "https://scholarships.gov.in/",
+      "documents": [
+        "Aadhaar / ID Proof",
+        "Income Certificate",
+        "Academic Marksheet",
+        "Admission / College Proof",
+        "Bank Account Details",
+        "Passport-size Photograph"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "AICTE Swanath Scholarship Scheme",
+      "education": [
+        "Diploma",
+        "UG"
+      ],
+      "category": [
+        "General",
+        "OBC",
+        "SC",
+        "ST",
+        "EWS"
+      ],
+      "incomeLimit": 800000,
+      "minPercentage": 50,
+      "deadline": "2026-10-31",
+      "status": "Open",
+      "applyUrl": "https://scholarships.gov.in/",
+      "documents": [
+        "Aadhaar / ID Proof",
+        "Academic Marksheet",
+        "Admission / College Proof",
+        "Bank Account Details",
+        "Income Certificate",
+        "Passport-size Photograph"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "PM YASASVI Central Sector Scheme",
+      "education": [
+        "UG",
+        "PG"
+      ],
+      "category": [
+        "OBC",
+        "EWS"
+      ],
+      "incomeLimit": 250000,
+      "minPercentage": 60,
+      "deadline": "2026-10-31",
+      "status": "Open",
+      "applyUrl": "https://scholarships.gov.in/",
+      "documents": [
+        "Aadhaar / ID Proof",
+        "Income Certificate",
+        "Academic Marksheet",
+        "Category Certificate",
+        "Bank Account Details",
+        "Passport-size Photograph"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "National Means-cum-Merit Scholarship",
+      "education": [
+        "School"
+      ],
+      "category": [
+        "General",
+        "OBC",
+        "SC",
+        "ST",
+        "EWS"
+      ],
+      "incomeLimit": 350000,
+      "minPercentage": 55,
+      "deadline": "2026-10-31",
+      "status": "Open",
+      "applyUrl": "https://scholarships.gov.in/",
+      "documents": [
+        "Aadhaar / ID Proof",
+        "Previous Class Marksheet",
+        "Income Certificate",
+        "Bank Account Details",
+        "Passport-size Photograph"
+      ]
+    }
+  ]
+}
