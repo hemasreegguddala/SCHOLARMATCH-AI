@@ -16,17 +16,19 @@ function getDatabase() {
     );
 }
 
-// Automatically close scholarships after deadline
+// Update scholarship status based on deadline
 function updateScholarshipStatus() {
     const database = getDatabase();
     const today = new Date();
 
-    database.scholarships.forEach(scholarship => {
+    database.scholarships.forEach((scholarship) => {
         if (scholarship.deadline) {
-            const deadline = new Date(scholarship.deadline);
+            const deadline = new Date(
+                scholarship.deadline + "T23:59:59"
+            );
 
             scholarship.status =
-                deadline < today ? "Closed" : "Open";
+                deadline >= today ? "Open" : "Closed";
         }
     });
 
@@ -36,57 +38,99 @@ function updateScholarshipStatus() {
         databaseFile,
         JSON.stringify(database, null, 2)
     );
+
+    return database;
 }
 
 // Get all scholarships
 app.get("/api/scholarships", (req, res) => {
-    updateScholarshipStatus();
-    res.json(getDatabase());
+    const database = updateScholarshipStatus();
+
+    res.json(database);
 });
 
 // Find scholarships for a student
 app.post("/api/match", (req, res) => {
+    try {
+        const {
+            income,
+            category,
+            percentage,
+            education
+        } = req.body;
 
-    const {
-        income,
-        category,
-        percentage,
-        education
-    } = req.body;
+        const database = updateScholarshipStatus();
 
-    const database = getDatabase();
+        const studentIncome = Number(income);
+        const studentPercentage = Number(percentage);
 
-    const studentIncome = Number(income);
-    const studentPercentage = Number(percentage);
+        const studentCategory =
+            String(category || "").trim().toLowerCase();
 
-    const matches = database.scholarships.filter(scholarship => {
+        const studentEducation =
+            String(education || "").trim().toLowerCase();
 
-        return (
-            studentIncome <= scholarship.incomeLimit &&
-            studentPercentage >= scholarship.minPercentage &&
-            scholarship.category.includes(category) &&
-            scholarship.education.includes(education) &&
-            scholarship.status === "Open"
-        );
-    });
+        const matches = database.scholarships.filter((scholarship) => {
 
-    res.json({
-        success: true,
-        count: matches.length,
-        scholarships: matches,
-        lastUpdated: database.lastUpdated
-    });
+            const categories = scholarship.category.map(
+                item => String(item).trim().toLowerCase()
+            );
+
+            const educationLevels = scholarship.education.map(
+                item => String(item).trim().toLowerCase()
+            );
+
+            const incomeMatch =
+                !Number.isNaN(studentIncome) &&
+                studentIncome <= Number(scholarship.incomeLimit);
+
+            const percentageMatch =
+                !Number.isNaN(studentPercentage) &&
+                studentPercentage >= Number(scholarship.minPercentage);
+
+            const categoryMatch =
+                categories.includes(studentCategory);
+
+            const educationMatch =
+                educationLevels.includes(studentEducation);
+
+            const statusMatch =
+                scholarship.status === "Open";
+
+            return (
+                incomeMatch &&
+                percentageMatch &&
+                categoryMatch &&
+                educationMatch &&
+                statusMatch
+            );
+        });
+
+        res.json({
+            success: true,
+            count: matches.length,
+            scholarships: matches,
+            lastUpdated: database.lastUpdated
+        });
+
+    } catch (error) {
+        console.error("Matching error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Unable to find scholarships."
+        });
+    }
 });
 
-// Manually check for updates
+// Manually update scholarship database
 app.post("/api/update", (req, res) => {
-
-    updateScholarshipStatus();
+    const database = updateScholarshipStatus();
 
     res.json({
         success: true,
         message: "Scholarship database checked.",
-        lastUpdated: new Date().toISOString()
+        lastUpdated: database.lastUpdated
     });
 });
 
@@ -97,9 +141,9 @@ setInterval(() => {
 }, 6 * 60 * 60 * 1000);
 
 app.listen(PORT, () => {
- console.log(
-    `Scholar Match AI running at http://localhost:${PORT}`
-);   
+    console.log(
+        `Scholar Match AI running at http://localhost:${PORT}`
+    );
 
     updateScholarshipStatus();
 });

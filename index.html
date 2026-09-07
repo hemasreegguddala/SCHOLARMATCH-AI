@@ -101,7 +101,10 @@
             background: #263d70;
         }
 
-        /* Dashboard */
+        .main-button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
 
         .dashboard {
             display: grid;
@@ -130,8 +133,6 @@
             font-size: 14px;
         }
 
-        /* Filters */
-
         .filters {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
@@ -143,8 +144,6 @@
         .filters select {
             background: white;
         }
-
-        /* Messages */
 
         .message {
             padding: 15px;
@@ -162,8 +161,6 @@
             background: #e5f7e9;
             color: #146c2e;
         }
-
-        /* Scholarship */
 
         .scholarship {
             border: 1px solid #ddd;
@@ -193,8 +190,6 @@
             color: red;
             font-weight: bold;
         }
-
-        /* Match Score */
 
         .match-box {
             background: #eef4ff;
@@ -236,8 +231,6 @@
             line-height: 1.6;
         }
 
-        /* Countdown */
-
         .countdown {
             background: #eef4ff;
             padding: 12px;
@@ -251,8 +244,6 @@
             background: #fff0f0;
             color: #c62828;
         }
-
-        /* Documents */
 
         .documents {
             margin-top: 18px;
@@ -289,8 +280,6 @@
             cursor: pointer;
         }
 
-        /* Roadmap */
-
         .roadmap {
             margin-top: 18px;
             padding: 16px;
@@ -310,8 +299,6 @@
         .roadmap li {
             margin-bottom: 8px;
         }
-
-        /* Apply */
 
         .apply-btn {
             display: block;
@@ -347,8 +334,6 @@
             padding: 30px;
             color: #666;
         }
-
-        /* Mobile */
 
         @media (max-width: 700px) {
 
@@ -388,8 +373,6 @@
 
 <div class="container">
 
-    <!-- Student Profile -->
-
     <div class="card">
 
         <h2>👨‍🎓 Student Profile</h2>
@@ -418,14 +401,12 @@
                 <label for="category">Category</label>
 
                 <select id="category">
-
                     <option value="">Select Category</option>
                     <option value="General">General</option>
                     <option value="OBC">OBC</option>
                     <option value="SC">SC</option>
                     <option value="ST">ST</option>
                     <option value="EWS">EWS</option>
-
                 </select>
             </div>
 
@@ -445,13 +426,11 @@
                 <label for="education">Education / Course</label>
 
                 <select id="education">
-
                     <option value="">Select Education</option>
                     <option value="School">School</option>
                     <option value="Diploma">Diploma</option>
                     <option value="UG">Undergraduate (UG)</option>
                     <option value="PG">Postgraduate (PG)</option>
-
                 </select>
             </div>
 
@@ -468,91 +447,46 @@
         </div>
 
         <button
+            type="button"
+            id="findButton"
             class="main-button"
-            onclick="findScholarships()"
         >
             🔍 Find My Scholarships
         </button>
 
     </div>
 
-
-    <!-- Message -->
-
     <div id="message" class="message"></div>
-
-
-    <!-- Dashboard -->
 
     <div id="dashboard" class="dashboard" style="display:none;">
 
         <div class="stat">
-            <div
-                class="stat-number"
-                id="totalCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                Scholarships Found
-            </div>
+            <div class="stat-number" id="totalCount">0</div>
+            <div class="stat-label">Scholarships Found</div>
         </div>
 
         <div class="stat">
-            <div
-                class="stat-number"
-                id="closingCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                Closing Soon
-            </div>
+            <div class="stat-number" id="closingCount">0</div>
+            <div class="stat-label">Closing Soon</div>
         </div>
 
         <div class="stat">
-            <div
-                class="stat-number"
-                id="documentCount"
-            >
-                0
-            </div>
-
-            <div class="stat-label">
-                Documents
-            </div>
+            <div class="stat-number" id="documentCount">0</div>
+            <div class="stat-label">Documents</div>
         </div>
 
         <div class="stat">
-            <div
-                class="stat-number"
-                id="bestScore"
-            >
-                0%
-            </div>
-
-            <div class="stat-label">
-                Best Match
-            </div>
+            <div class="stat-number" id="bestScore">0%</div>
+            <div class="stat-label">Best Match</div>
         </div>
 
     </div>
-
-
-    <!-- Results -->
 
     <div class="card">
 
         <h2>🎯 Matching Scholarships</h2>
 
-        <!-- Search and filters -->
-
-        <div
-            id="filterArea"
-            style="display:none;"
-        >
+        <div id="filterArea" style="display:none;">
 
             <div class="filters">
 
@@ -599,15 +533,11 @@
 
         </div>
 
-        <div
-            id="lastUpdated"
-            class="last-updated"
-        ></div>
+        <div id="lastUpdated" class="last-updated"></div>
 
     </div>
 
 </div>
-
 
 <footer>
 
@@ -622,6 +552,16 @@
 
 let allScholarships = [];
 let studentProfile = {};
+
+
+/* =========================
+   BACKEND SERVER
+========================= */
+
+const API_BASE_URL =
+    window.location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://scholarmatch-ai.onrender.com";
 
 
 /* =========================
@@ -645,12 +585,18 @@ async function findScholarships() {
     const education =
         document.getElementById("education").value;
 
+    const state =
+        document.getElementById("state").value.trim();
+
 
     const message =
         document.getElementById("message");
 
     const results =
         document.getElementById("results");
+
+    const button =
+        document.getElementById("findButton");
 
 
     message.style.display = "none";
@@ -684,7 +630,9 @@ async function findScholarships() {
 
         percentage: Number(percentage),
 
-        education: education
+        education: education,
+
+        state: state
 
     };
 
@@ -692,26 +640,39 @@ async function findScholarships() {
     results.innerHTML =
         "<p>🔄 Finding the best scholarships for you...</p>";
 
+    button.disabled = true;
+
+    button.textContent =
+        "🔄 Finding Scholarships...";
+
 
     try {
 
         const response =
-           await fetch("/api/match",...)  {
+            await fetch(
+                API_BASE_URL + "/api/match",
+                {
 
-                method: "POST",
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-                body: JSON.stringify(studentProfile)
+                    body: JSON.stringify(
+                        studentProfile
+                    )
 
-            });
+                }
+            );
 
 
         if (!response.ok) {
 
-            throw new Error("Server error");
+            throw new Error(
+                "Server returned " +
+                response.status
+            );
 
         }
 
@@ -732,20 +693,48 @@ async function findScholarships() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "ScholarMatch error:",
+            error
+        );
+
 
         results.innerHTML = "";
 
+
         message.textContent =
-            "❌ Could not connect to the scholarship server. Make sure server.js is running.";
+            "❌ Could not connect to the scholarship server. Please try again.";
 
         message.classList.add("error");
 
         message.style.display = "block";
 
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "🔍 Find My Scholarships";
+
     }
 
 }
+
+
+/* Make function available to the button */
+
+window.findScholarships =
+    findScholarships;
+
+
+/* Button click */
+
+document
+    .getElementById("findButton")
+    .addEventListener(
+        "click",
+        findScholarships
+    );
 
 
 /* =========================
@@ -773,7 +762,9 @@ function displayResults(data, name) {
     ) {
 
         dashboard.style.display = "none";
+
         filterArea.style.display = "none";
+
 
         results.innerHTML = `
 
@@ -786,6 +777,7 @@ function displayResults(data, name) {
             </div>
 
         `;
+
 
         lastUpdated.textContent =
             data.lastUpdated
@@ -829,6 +821,7 @@ function displayResults(data, name) {
 
 
     dashboard.style.display = "grid";
+
     filterArea.style.display = "block";
 
 
@@ -882,8 +875,6 @@ function calculateMatchScore(scholarship) {
         studentProfile.percentage;
 
 
-    /* Income strength */
-
     if (
         scholarship.incomeLimit > 0
     ) {
@@ -910,8 +901,6 @@ function calculateMatchScore(scholarship) {
     }
 
 
-    /* Academic strength */
-
     if (
         scholarship.minPercentage
     ) {
@@ -937,8 +926,6 @@ function calculateMatchScore(scholarship) {
 
     }
 
-
-    /* Maximum */
 
     return Math.min(
         99,
@@ -1026,7 +1013,10 @@ function renderScholarships(
                                 (doc, docIndex) => {
 
                                     const checkboxId =
-                                        `doc-${index}-${docIndex}`;
+                                        "doc-" +
+                                        index +
+                                        "-" +
+                                        docIndex;
 
                                     return `
 
@@ -1129,14 +1119,17 @@ function renderScholarships(
             `;
 
 
-            const explanation = getExplanation(
-                scholarship
-            );
+            const explanation =
+                getExplanation(
+                    scholarship
+                );
 
 
-            const card = document.createElement(
-                "div"
-            );
+            const card =
+                document.createElement(
+                    "div"
+                );
+
 
             card.className =
                 "scholarship";
@@ -1150,8 +1143,6 @@ function renderScholarships(
                     )}
                 </h3>
 
-
-                <!-- Match Score -->
 
                 <div class="match-box">
 
@@ -1167,6 +1158,7 @@ function renderScholarships(
 
                     </div>
 
+
                     <div class="progress">
 
                         <div
@@ -1175,6 +1167,7 @@ function renderScholarships(
                         ></div>
 
                     </div>
+
 
                     <div class="why-match">
 
@@ -1311,7 +1304,9 @@ function renderScholarships(
             `;
 
 
-            results.appendChild(card);
+            results.appendChild(
+                card
+            );
 
         }
     );
@@ -1437,8 +1432,10 @@ function updateDashboard(
                         "T23:59:59"
                     );
 
+
                 const now =
                     new Date();
+
 
                 const difference =
                     deadline.getTime() -
@@ -1533,7 +1530,9 @@ function applyFilters() {
             scholarship => {
 
                 const nameMatch =
-                    scholarship.name
+                    String(
+                        scholarship.name || ""
+                    )
                         .toLowerCase()
                         .includes(search);
 
@@ -1859,6 +1858,11 @@ setInterval(
 
     },
     1000
+);
+
+
+console.log(
+    "ScholarMatch AI JavaScript loaded successfully."
 );
 
 </script>
