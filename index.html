@@ -559,7 +559,9 @@ let studentProfile = {};
 ========================= */
 
 const API_BASE_URL =
-    "https://scholarmatch-ai.onrender.com";
+    window.location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://scholarmatch-ai.onrender.com";
 
 
 /* =========================
